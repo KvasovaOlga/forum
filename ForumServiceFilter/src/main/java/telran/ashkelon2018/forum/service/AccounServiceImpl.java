@@ -59,11 +59,19 @@ public class AccounServiceImpl implements AccountService {
 
 	public UserProfileDto removeUser(String login, String token) {
 		AccountUserCredentials credentials = accountConfiguration.tokenDecode(token);
-		UserAccount userAccount1 = userRepository.findById(credentials.getLogin()).orElse(null);
+		UserAccount userAccount1 = userRepository.findById(credentials.getLogin()).get();
+		
+		 Set<String> roles = userAccount1.getRoles();
+		 boolean hasRight = roles.stream().anyMatch(s -> "Admin".equals(s) ||
+		 "Moderator".equals(s));
+		 hasRight = hasRight || credentials.getLogin().equals(login);
+		 if (!hasRight) {
+		 throw new NotAuthorizedException("Forbidden");
+		 }
 		UserAccount userAccount = userRepository.findById(login).orElse(null);
-		if(!login.equals(credentials.getLogin())) {
-			preCheckRole(userAccount1);
-		}
+//		if (!login.equals(credentials.getLogin())) {
+//			preCheckRole(userAccount1);
+//		}
 		if (userAccount != null) {
 			userRepository.delete(userAccount);
 		}
@@ -87,7 +95,7 @@ public class AccounServiceImpl implements AccountService {
 	}
 
 	public void preCheckRole(UserAccount userAccount1) throws RuntimeException {
-		if (!(userAccount1.hasRole("admin") || userAccount1.hasRole("moderator"))) {
+		if (!(userAccount1.hasRole("Admin") || userAccount1.hasRole("Moderator"))) {
 			throw new NotAuthorizedException("No permission to do it");
 		}
 	}

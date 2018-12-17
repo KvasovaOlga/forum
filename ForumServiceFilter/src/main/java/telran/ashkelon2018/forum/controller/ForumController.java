@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,13 +37,13 @@ public class ForumController {
 	}
 
 	@DeleteMapping("/post/{id}")
-	public Post removePost(@PathVariable String id) {
-		return forumService.removePost(id);
+	public Post removePost(@PathVariable String id, @RequestHeader("Authorization") String token) {
+		return forumService.removePost(id, token);
 	}
 
 	@PutMapping("/post")
-	public Post updatePost(@RequestBody PostUpdateDto postUpdate) {
-		return forumService.updatePost(postUpdate);
+	public Post updatePost(@RequestBody PostUpdateDto postUpdate, @RequestHeader("Authorization") String token) {
+		return forumService.updatePost(postUpdate, token);
 	}
 
 	@PutMapping("/post/like/{id}")
@@ -69,5 +70,5 @@ public class ForumController {
 	public Iterable<Post> findPostByDates(@RequestBody DatePeriodDto datePeriod) {
 		return forumService.findPostByDates(datePeriod);
 	}
-	
+
 }

@@ -38,14 +38,14 @@ public class AccountManagmentController {
 		return accounService.removeUser(login, token);
 	}
 
-	@PutMapping("/{login}/{role}")
+	@PutMapping("/role/{login}/{role}")
 	public Set<String> addRole(@PathVariable String login, @PathVariable String role,
 			@RequestHeader("Authorization") String token) {
 		return accounService.addRole(login, role, token);
 	}
 
-	@DeleteMapping("/{login}/{role}")
-	public Set<String> removeRole(String login, String role, String token) {
+	@DeleteMapping("/role/{login}/{role}")
+	public Set<String> removeRole(@PathVariable String login, @PathVariable String role, @RequestHeader("Authorization")String token) {
 		return accounService.removeRole(login, role, token);
 	}
 

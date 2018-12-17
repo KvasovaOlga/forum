@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Service;
 
 import telran.ashkelon2018.forum.configuration.AccountConfiguration;
 import telran.ashkelon2018.forum.configuration.AccountUserCredentials;
@@ -38,7 +37,7 @@ public class ExpDateFilter implements Filter {
 		if (!path.startsWith("/account/password") && token != null) {
 			AccountUserCredentials credentials = configuration.tokenDecode(token);
 			UserAccount userAccount = repository.findById(credentials.getLogin()).orElse(null);
-			if (userAccount.getExpDate().isBefore(LocalDateTime.now())) {
+			if (userAccount != null && userAccount.getExpDate().isBefore(LocalDateTime.now())) {
 				response.sendError(403, "Password expired");
 				return;
 			}
